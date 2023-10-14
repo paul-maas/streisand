@@ -22,7 +22,7 @@ streisand_common_packages:
   # Ensures the server's clock is set properly
   - ntp
   # Required to use the Ansible `expect` module
-  - python-pexpect
+  - python3-pexpect
   # Required for the apt_repository module
   - software-properties-common
   # Used to generate convenient QR codes for mobile clients in the
