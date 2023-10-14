@@ -118,7 +118,7 @@
 
 - name: Stop and disable ocserv.socket
   systemd:
-    name: ocserv.socket
+    name: ocserv
     state: stopped
     enabled: no
 
