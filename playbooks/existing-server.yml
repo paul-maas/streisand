@@ -9,8 +9,13 @@
   tasks:
     - set_fact:
         streisand_genesis_role: "existing-server"
-
-- include: ssh-setup.yml
+        
+- name: Configure Ansible SSH
+  hosts: streisand-host
+  gather_facts: no
+  tasks:
+    - set_fact:
+        ansible_ssh_private_key_file: "{{ streisand_ssh_private_key }}"
 
 - name: Check SSH access to existing server
   hosts: streisand-host
