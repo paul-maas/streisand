@@ -64,12 +64,12 @@ Python 3.
     exit 1
 }
 
-ensure_python_3_5 () {
+ensure_python_3_12 () {
     python_version=$($python --version 2>&1)
-    if [[ $python_version < "Python 3.5" ]]; then
+    if [[ $python_version < "Python 3.12" ]]; then
 	echo "
 
-The $python command invokes $python_version. Python 3.5 or later is
+The $python command invokes $python_version. Python 3.12 or later is
 required.
 "
 	return 1
@@ -84,7 +84,7 @@ fi
 
 if type -p $python >/dev/null; then
     echo "Found a python3 command...."
-    if ! ensure_python_3_5; then
+    if ! ensure_python_3_12; then
 	request_python_3
 	exit 1
     fi
@@ -95,13 +95,13 @@ else
 	echo "
 
 On your system, neither 'python3' or 'python' exist as commands. Please
-install Python 3.5 or later.
+install Python 3.12 or later.
 
 "
 	request_python_3
 	exit 1
     fi
-    if ! ensure_python_3_5; then
+    if ! ensure_python_3_12; then
 	request_python_3
 	exit 1
     fi
