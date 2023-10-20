@@ -17,7 +17,7 @@
 
 - name: "Set the variable to the value"
   set_fact:
-    external_ipv4_address: "{{ dig_output.stdout | regex_replace('\"', '') }}"
+    external_ipv4_address: "{{ dig_output.stdout | replace('\"', '') }}"
     when: (dig_output.rc == 0)
 
 # Enter this block only when when the IPs are different and query user for updating

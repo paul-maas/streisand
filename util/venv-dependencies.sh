@@ -40,6 +40,7 @@ fi
 
 
 python="python3"
+required_version="3.5.0"
 sudo_command="sudo"
 sudo_for_pip_install="sudo -H"
 
@@ -64,18 +65,39 @@ Python 3.
     exit 1
 }
 
-ensure_python_3_12 () {
-    python_version=$($python --version 2>&1)
-    if [[ $python_version < "Python 3.12" ]]; then
-	echo "
+ensure_python_3_5 () {
+    python_version=$($python --version 2>&1 | awk '{print $2}')
 
-The $python command invokes $python_version. Python 3.12 or later is
+    IFS='.' read -ra current_version <<< "$python_version"
+    IFS='.' read -ra required_version_parts <<< "$required_version"
+
+    # Сравниваем каждую часть версии поочередно
+    for i in "${!required_version_parts[@]}"; do
+        current_part=${current_version[$i]}
+        required_part=${required_version_parts[$i]}
+      
+        # Удаляем ведущие нули из каждой части версии
+        current_part=${current_part##+(0)}
+        required_part=${required_part##+(0)}
+      
+        # Если текущая часть версии меньше требуемой, выводим сообщение об ошибке
+        if (( current_part < required_part )); then
+            echo "
+
+The $python command invokes $python_version. Python 3.5 or later is
 required.
 "
-	return 1
-    fi
-    return 0
+            return 1
+        fi
+      
+        # Если текущая часть версии больше требуемой, можно прекратить сравнение
+        if (( current_part > required_part )); then
+            break
+        fi
+        return 0
+    done
 }
+
 
 if [ "$#" -ne 1 ]; then
    usage
@@ -84,7 +106,7 @@ fi
 
 if type -p $python >/dev/null; then
     echo "Found a python3 command...."
-    if ! ensure_python_3_12; then
+    if ! ensure_python_3_5; then
 	request_python_3
 	exit 1
     fi
@@ -95,13 +117,13 @@ else
 	echo "
 
 On your system, neither 'python3' or 'python' exist as commands. Please
-install Python 3.12 or later.
+install Python 3.5 or later.
 
 "
 	request_python_3
 	exit 1
     fi
-    if ! ensure_python_3_12; then
+    if ! ensure_python_3_5; then
 	request_python_3
 	exit 1
     fi

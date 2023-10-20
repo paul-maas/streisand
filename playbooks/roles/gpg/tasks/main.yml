@@ -50,17 +50,29 @@
 - name: "Start a new dirmngr with our config changes"
   command: "gpgconf --launch dirmngr"
 
-- name: "create S.dirmngr directory if it does not exist "
+- name: "create S.dirmngr directory if it does not exist"
+  stat:
+    path: /root/.gnupg/S.dirmngr
+  register: dirmngr_stat
+
+- name: "create S.dirmngr directory"
   file:
     path: /root/.gnupg/S.dirmngr
     state: directory
     mode: '0755'
-    
-- name: "create S.gpg-agent directory if it does not exist "
+  when: not dirmngr_stat.stat.exists
+
+- name: "create S.gpg-agent directory if it does not exist"
+  stat:
+    path: /root/.gnupg/S.gpg-agent
+  register: gpg_agent_stat
+
+- name: "create S.gpg-agent directory"
   file:
     path: /root/.gnupg/S.gpg-agent
     state: directory
     mode: '0755'
+  when: not gpg_agent_stat.stat.exists
 
 - name: "Wait for the GPG agent and dirmngr control sockets"
   wait_for:

@@ -4,8 +4,8 @@
     repo: 'ppa:longsleep/golang-backports'
   register: golang_add_apt_repository
   until: not golang_add_apt_repository.failed
-  retries: "{{ apt_repository_retries }}"
-  delay: "{{ apt_repository_delay }}"
+  retries: "{{ apt_repository_retries | default(3) | int }}"
+  delay: "{{ apt_repository_delay | default(5) | int }}"
 
 - name: Install golang-go
   apt:
